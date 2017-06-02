@@ -10,7 +10,7 @@ grammar TZData {
         \s*'#'\N*\s*
     }
     token rule {
-        Rule\s+<name>\s+<from>\s+<to>\s+<type>\s+<in>\s+<on>\s+<at>\s+<save>\s+<letter> <comment>? \s*
+        Rule\s+<name>\s+<tz-from>\s+<tz-to>\s+<type>\s+<in>\s+<on>\s+<at>\s+<save>\s+<letter> <comment>? \s*
     }
     token zone {
         Zone\s+<name> <zonedata>+
@@ -22,8 +22,8 @@ grammar TZData {
         Link\s+<new-tz>\s+<old-tz> <comment>? \s*
     }
     token name { \S+ }
-    token from { \S+ }
-    token to { \S+ }
+    token tz-from { \S+ }
+    token tz-to { \S+ }
     token type { \S+ }
     token in { \S+ }
     token on { \S+ }
@@ -80,8 +80,8 @@ sub MAIN($tzdata-file, $output-dir) {
         say +@zones ~ " zones";
         say +@links ~ " links";
         for @rules -> $rule {
-            my $yfrom = +$rule<from>;
-            my $yto = ~$rule<to>;
+            my $yfrom = +$rule<tz-from>;
+            my $yto = ~$rule<tz-to>;
             if $yto eq 'only' { $yto = $yfrom; }
             elsif $yto eq 'max' { $yto = Inf; }
             else { $yto = +$yto; }
