@@ -31,7 +31,7 @@ sub MAIN {
 
 sub write-zone-test($header, $module-name, $output-dir) {
     my $test = q:to/EOT/;
-    plan 4;
+    plan 5;
 
     EOT
     $test ~= "use $module-name;\n";
@@ -41,6 +41,7 @@ sub write-zone-test($header, $module-name, $output-dir) {
     is $tz.rules.WHAT, Hash, "rules is a Hash";
     ok $tz.zonedata, "timezone has zonedata";
     is $tz.zonedata.WHAT, Array, "zonedata is an Array";
+    lives-ok { $tz.offset }, 'calculating offset does not die';
     EOT
 
     my $test-fname = $module-name.subst('::', '-', :g) ~ '.t';

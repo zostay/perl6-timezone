@@ -6,7 +6,7 @@ use Test;
 use DateTime::TimeZone;
 use DateTime::TimeZone::Zone;
 
-plan 4;
+plan 5;
 
 use DateTime::TimeZone::Zone::Etc::GMT_plus_1;
 my $tz = DateTime::TimeZone::Zone::Etc::GMT_plus_1.new;
@@ -14,3 +14,4 @@ ok $tz, "timezone can be instantiated";
 is $tz.rules.WHAT, Hash, "rules is a Hash";
 ok $tz.zonedata, "timezone has zonedata";
 is $tz.zonedata.WHAT, Array, "zonedata is an Array";
+lives-ok { $tz.offset }, 'calculating offset does not die';
