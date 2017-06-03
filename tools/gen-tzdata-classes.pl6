@@ -88,7 +88,13 @@ sub MAIN($tzdata-file, $output-dir) {
             my $years = $yfrom..$yto;
             my $month = %month-to-num{$rule<in>};
 
-            my %data = (years => $years, month => $month, time => ~$rule<at>, adjust => ~$rule<save>, letter => ~$rule<letter>);
+            my $at = ~$rule<at>;
+            my $at-type = 'w';
+            if $at ~~ s/$<at-type> = <[gswuz]>$// {
+                $at-type = ~$<at-type>;
+            }
+
+            my %data = (years => $years, month => $month, time => $at, at-type => $at-type, adjust => ~$rule<save>, letter => ~$rule<letter>);
             if $rule<on> ~~ /^\d+$/ {
                 %data<date> = ~$rule<on>;
             } elsif $rule<on> ~~ /^last/ {
@@ -96,7 +102,7 @@ sub MAIN($tzdata-file, $output-dir) {
                 $tmp ~~ s/^last//;
                 %data<lastdow> = %day-to-num{$tmp};
             } else {
-                my @tmp = split(/\>\=/, ~$rule<on>);
+                my @tmp = split('>=', ~$rule<on>);
                 %data<dow> = ( dow => %day-to-num{@tmp[0]}, mindate => @tmp[1] ).hash;
             }
             my $tmp = %data;
